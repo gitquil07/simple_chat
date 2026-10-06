@@ -13,7 +13,7 @@ A minimal web chat for the [MAX](https://max.ru) messenger, styled after web.max
   Delivery and read ticks come from `outgoingMessageStatus` notifications.
 
 Credentials and chat history are kept in the browser's `localStorage` only. All requests go straight
-from the browser to `https://api.green-api.com/v3` (the host is editable on the login screen).
+from the browser to `https://api.green-api.com/v3` (MAX instances, ids starting with `3100`) or to `https://<first 4 digits of idInstance>.api.greenapi.com` for other instances. The apiUrl from the console can also be entered on the login screen.
 
 ## Requirements
 

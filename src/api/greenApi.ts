@@ -2,6 +2,17 @@ import type { Credentials, Notification } from '../types';
 
 export const DEFAULT_API_URL = 'https://api.green-api.com/v3';
 
+/**
+ * MAX instances (ids starting with 3100) use the shared v3 host. Other instances live on a host
+ * named after the first four digits of idInstance, e.g. 7107… → https://7107.api.greenapi.com.
+ * The console shows the exact apiUrl, which can always be entered by hand on the login screen.
+ */
+export function apiUrlForInstance(idInstance: string): string {
+  const prefix = idInstance.trim().slice(0, 4);
+  if (!/^\d{4}$/.test(prefix) || prefix === '3100') return DEFAULT_API_URL;
+  return `https://${prefix}.api.greenapi.com`;
+}
+
 export class ApiError extends Error {
   status: number;
 

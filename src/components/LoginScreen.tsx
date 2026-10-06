@@ -1,12 +1,13 @@
 import { useState, type FormEvent } from 'react';
-import { DEFAULT_API_URL, getStateInstance } from '../api/greenApi';
+import { apiUrlForInstance, getStateInstance } from '../api/greenApi';
 import type { Credentials } from '../types';
 import { Logo } from './Logo';
 
 export function LoginScreen({ onLogin }: { onLogin: (creds: Credentials) => void }) {
   const [idInstance, setIdInstance] = useState('');
   const [apiTokenInstance, setApiTokenInstance] = useState('');
-  const [apiUrl, setApiUrl] = useState(DEFAULT_API_URL);
+  // Empty means "derive from idInstance".
+  const [apiUrl, setApiUrl] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -14,7 +15,7 @@ export function LoginScreen({ onLogin }: { onLogin: (creds: Credentials) => void
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     const creds: Credentials = {
-      apiUrl: apiUrl.trim() || DEFAULT_API_URL,
+      apiUrl: apiUrl.trim() || apiUrlForInstance(idInstance),
       idInstance: idInstance.trim(),
       apiTokenInstance: apiTokenInstance.trim(),
     };
@@ -74,7 +75,11 @@ export function LoginScreen({ onLogin }: { onLogin: (creds: Credentials) => void
         {showAdvanced ? (
           <label className="field">
             <span>apiUrl</span>
-            <input value={apiUrl} onChange={(e) => setApiUrl(e.target.value)} />
+            <input
+              value={apiUrl}
+              onChange={(e) => setApiUrl(e.target.value)}
+              placeholder={apiUrlForInstance(idInstance)}
+            />
           </label>
         ) : (
           <button type="button" className="link-button" onClick={() => setShowAdvanced(true)}>
